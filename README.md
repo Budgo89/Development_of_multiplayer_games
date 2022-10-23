@@ -1,1 +1,2 @@
 # Development_of_multiplayer_games
+Игра про отчаянного добывателя алмазов
