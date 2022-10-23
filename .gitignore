@@ -9,6 +9,13 @@
 /Diamond-miner/[Bb]uilds/
 /Diamond-miner/[Ll]ogs/
 /Diamond-miner/[Mm]emoryCaptures/
+/Development_of_multiplayer_games/[Ll]ibrary/
+/Development_of_multiplayer_games/[Tt]emp/
+/Development_of_multiplayer_games/[Oo]bj/
+/Development_of_multiplayer_games/[Bb]uild/
+/Development_of_multiplayer_games/[Bb]uilds/
+/Development_of_multiplayer_games/[Ll]ogs/
+/Development_of_multiplayer_games/[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
