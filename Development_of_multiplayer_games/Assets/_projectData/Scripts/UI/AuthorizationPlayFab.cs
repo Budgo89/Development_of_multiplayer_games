@@ -12,6 +12,9 @@ public class AuthorizationPlayFab : MonoBehaviour
     [SerializeField] private Button _registrationButton;
     [SerializeField] private Text _errorText;
     [SerializeField] private Image _loading;
+    [SerializeField] private Text _lobbiUsername;
+    [SerializeField] private Text _lobbiEmailname;
+    [SerializeField] private Text _lobbiId;
 
     private string _userName;
     private string _userPassword;
@@ -53,6 +56,7 @@ public class AuthorizationPlayFab : MonoBehaviour
             _errorText.gameObject.SetActive(false);
             Debug.Log(result.LastLoginTime);
             LoadingFalse();
+            Lobbi();
         }, error =>
         {
             _errorText.gameObject.SetActive(true);
@@ -71,5 +75,34 @@ public class AuthorizationPlayFab : MonoBehaviour
     {
         _isLoading = true;
         _loading.gameObject.SetActive(true);
+    }
+
+    private void Lobbi()
+    {
+        _userNameField.gameObject.SetActive(false);
+        _userPasswordField.gameObject.SetActive(false);
+        _registrationButton.gameObject.SetActive(false);
+        _errorText.gameObject.SetActive(false);
+        _lobbiUsername.gameObject.SetActive(true);
+        _lobbiEmailname.gameObject.SetActive(true);
+        _lobbiId.gameObject.SetActive(true);
+        GetPlayerInfo();
+    }
+
+
+    private void GetPlayerInfo()
+    {
+        PlayFabClientAPI.GetAccountInfo(new GetAccountInfoRequest
+        {
+
+        }, result =>
+        {
+            _lobbiUsername.text = $"Ваш логин: {result.AccountInfo.Username}";
+            _lobbiEmailname.text = $"Ваш Email: {result.AccountInfo.PrivateInfo.Email}";
+            _lobbiId.text = $"Ващ ID: {result.AccountInfo.PlayFabId}";
+        }, error =>
+        {
+
+        });
     }
 }
