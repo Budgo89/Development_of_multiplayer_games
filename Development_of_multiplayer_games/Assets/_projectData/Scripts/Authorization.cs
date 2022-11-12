@@ -19,6 +19,7 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     private Button _playFabDisconnectButton;
     private Button _photonConnectButton;
     private Button _photonDisconnectButton;
+    private Button _playFabDeleteAccButton;
     private TMP_Text _debagText;
 
     void Start()
@@ -35,6 +36,7 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         _playFabDisconnectButton = _menuView.PlayFabDisconnectButton;
         _photonConnectButton = _menuView.PhotonConnectButton;
         _photonDisconnectButton = _menuView.PhotonDisconnectButton;
+        _playFabDeleteAccButton = _menuView.PlayFabDeleteAccButton;
         _debagText = _menuView.DebagText;
     }
 
@@ -44,6 +46,12 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         _playFabDisconnectButton.onClick.AddListener(PlayFabDisconnectOnClickButton);
         _photonConnectButton.onClick.AddListener(PhotonConnectOnClickButton);
         _photonDisconnectButton.onClick.AddListener(PhotonDisconnectOnClickButton);
+        _playFabDeleteAccButton.onClick.AddListener(PlayFabDeleteAccOcClickButton);
+    }
+
+    private void PlayFabDeleteAccOcClickButton()
+    {
+        PlayerPrefs.DeleteKey(_authentificationKey);
     }
 
     private void PhotonDisconnectOnClickButton()
