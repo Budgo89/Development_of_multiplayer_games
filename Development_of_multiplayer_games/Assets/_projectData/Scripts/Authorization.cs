@@ -11,6 +11,8 @@ using Random = UnityEngine.Random;
 public class Authorization : MonoBehaviourPunCallbacks, IDisposable
 {
     [SerializeField] private string _playFabTitle;
+    [SerializeField] private string _gameVersion = "dev";
+    [SerializeField] private string _authentificationKey = "AUTHENTIFICATION_KEY";
     [SerializeField] private MenuView _menuView;
 
     private Button _playFabConnectButton;
@@ -58,12 +60,15 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
             PlayFabSettings.staticSettings.TitleId = _playFabTitle;
 
+        var needCreation = !PlayerPrefs.HasKey(_authentificationKey);
+        var id = PlayerPrefs.GetString(_authentificationKey, Guid.NewGuid().ToString());
+
         var request = new LoginWithCustomIDRequest
         {
-            CustomId = "TestUser",
+            CustomId = id,
             CreateAccount = true
         };
-
+        
         PhotonNetwork.AuthValues = new AuthenticationValues(request.TitleId);
         PhotonNetwork.NickName = request.CustomId;
         Connect();
@@ -82,16 +87,19 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     {
         if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
             PlayFabSettings.staticSettings.TitleId = _playFabTitle;
+        var needCreation = !PlayerPrefs.HasKey(_authentificationKey);
+        var id = PlayerPrefs.GetString(_authentificationKey, Guid.NewGuid().ToString());
 
         var request = new LoginWithCustomIDRequest
         {
-            CustomId = "TestUser",
+            CustomId = id,
             CreateAccount = true
         };
 
         PlayFabClientAPI.LoginWithCustomID(request,
             result =>
             {
+                PlayerPrefs.SetString(_authentificationKey, id);
                 Debug.Log(result.PlayFabId);
                 _debagText.text = $"Подключение успешно \n {result.PlayFabId}";
                 _playFabDisconnectButton.gameObject.SetActive(true);
