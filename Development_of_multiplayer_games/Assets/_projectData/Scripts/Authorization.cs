@@ -11,12 +11,15 @@ using Random = UnityEngine.Random;
 public class Authorization : MonoBehaviourPunCallbacks, IDisposable
 {
     [SerializeField] private string _playFabTitle;
+    [SerializeField] private string _gameVersion = "dev";
+    [SerializeField] private string _authentificationKey = "AUTHENTIFICATION_KEY";
     [SerializeField] private MenuView _menuView;
 
     private Button _playFabConnectButton;
     private Button _playFabDisconnectButton;
     private Button _photonConnectButton;
     private Button _photonDisconnectButton;
+    private Button _playFabDeleteAccButton;
     private TMP_Text _debagText;
 
     void Start()
@@ -33,6 +36,7 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         _playFabDisconnectButton = _menuView.PlayFabDisconnectButton;
         _photonConnectButton = _menuView.PhotonConnectButton;
         _photonDisconnectButton = _menuView.PhotonDisconnectButton;
+        _playFabDeleteAccButton = _menuView.PlayFabDeleteAccButton;
         _debagText = _menuView.DebagText;
     }
 
@@ -42,6 +46,12 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         _playFabDisconnectButton.onClick.AddListener(PlayFabDisconnectOnClickButton);
         _photonConnectButton.onClick.AddListener(PhotonConnectOnClickButton);
         _photonDisconnectButton.onClick.AddListener(PhotonDisconnectOnClickButton);
+        _playFabDeleteAccButton.onClick.AddListener(PlayFabDeleteAccOcClickButton);
+    }
+
+    private void PlayFabDeleteAccOcClickButton()
+    {
+        PlayerPrefs.DeleteKey(_authentificationKey);
     }
 
     private void PhotonDisconnectOnClickButton()
@@ -58,12 +68,15 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
             PlayFabSettings.staticSettings.TitleId = _playFabTitle;
 
+        var needCreation = !PlayerPrefs.HasKey(_authentificationKey);
+        var id = PlayerPrefs.GetString(_authentificationKey, Guid.NewGuid().ToString());
+
         var request = new LoginWithCustomIDRequest
         {
-            CustomId = "TestUser",
+            CustomId = id,
             CreateAccount = true
         };
-
+        
         PhotonNetwork.AuthValues = new AuthenticationValues(request.TitleId);
         PhotonNetwork.NickName = request.CustomId;
         Connect();
@@ -82,16 +95,19 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     {
         if (string.IsNullOrEmpty(PlayFabSettings.staticSettings.TitleId))
             PlayFabSettings.staticSettings.TitleId = _playFabTitle;
+        var needCreation = !PlayerPrefs.HasKey(_authentificationKey);
+        var id = PlayerPrefs.GetString(_authentificationKey, Guid.NewGuid().ToString());
 
         var request = new LoginWithCustomIDRequest
         {
-            CustomId = "TestUser",
+            CustomId = id,
             CreateAccount = true
         };
 
         PlayFabClientAPI.LoginWithCustomID(request,
             result =>
             {
+                PlayerPrefs.SetString(_authentificationKey, id);
                 Debug.Log(result.PlayFabId);
                 _debagText.text = $"Подключение успешно \n {result.PlayFabId}";
                 _playFabDisconnectButton.gameObject.SetActive(true);
