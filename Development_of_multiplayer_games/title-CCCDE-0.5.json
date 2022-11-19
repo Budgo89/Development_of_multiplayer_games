@@ -1,0 +1,85 @@
+{
+  "CatalogVersion": "0.5",
+  "Catalog": [
+    {
+      "ItemId": "One",
+      "ItemClass": null,
+      "CatalogVersion": "0.5",
+      "DisplayName": "My first item",
+      "Description": null,
+      "VirtualCurrencyPrices": null,
+      "RealCurrencyPrices": null,
+      "Tags": null,
+      "CustomData": null,
+      "Consumable": null,
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "Superpower",
+      "ItemClass": "Bonus",
+      "CatalogVersion": "0.5",
+      "DisplayName": "Superpower",
+      "Description": "Allows you to move 2 stones",
+      "VirtualCurrencyPrices": {
+        "CR": 10
+      },
+      "RealCurrencyPrices": null,
+      "Tags": [
+        "Bonus"
+      ],
+      "CustomData": "{}",
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": true,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "Superblow",
+      "ItemClass": "Bonus",
+      "CatalogVersion": "0.5",
+      "DisplayName": "Superblow",
+      "Description": "Allows you to destroy the stone",
+      "VirtualCurrencyPrices": {
+        "CR": 10
+      },
+      "RealCurrencyPrices": {},
+      "Tags": [
+        "Bonus"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": true,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    }
+  ],
+  "DropTables": []
+}
