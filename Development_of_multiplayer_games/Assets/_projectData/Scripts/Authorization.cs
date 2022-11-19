@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using PlayFab;
 using PlayFab.ClientModels;
+using Profile;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +15,9 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     [SerializeField] private string _playFabTitle;
     [SerializeField] private string _gameVersion = "dev";
     [SerializeField] private string _authentificationKey = "AUTHENTIFICATION_KEY";
-    [SerializeField] private MenuView _menuView;
+    private List<RoomInfo> _roomList;
+    private MenuView _menuView;
+    private ProfilePlayers _profilePlayer;
 
     private Button _playFabConnectButton;
     private Button _playFabDisconnectButton;
@@ -21,14 +25,20 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     private Button _photonDisconnectButton;
     private Button _playFabDeleteAccButton;
     private TMP_Text _debagText;
+    private string _roomName;
 
-    void Start()
+
+
+    public void StartAuthorization(MenuView menuView, ProfilePlayers profilePlayer)
     {
+        _menuView = menuView;
+        _profilePlayer = profilePlayer;
         AddElementsUi();
         Subscribe();
         _playFabDisconnectButton.gameObject.SetActive(false);
         _photonDisconnectButton.gameObject.SetActive(false);
     }
+    
 
     private void AddElementsUi()
     {
@@ -79,9 +89,10 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         
         PhotonNetwork.AuthValues = new AuthenticationValues(request.TitleId);
         PhotonNetwork.NickName = request.CustomId;
-        Connect();
+        //Connect();
         _photonDisconnectButton.gameObject.SetActive(true);
         _playFabConnectButton.gameObject.SetActive(false);
+        _profilePlayer.CurrentState.Value = GameState.Lobbi;
     }
 
     private void PlayFabDisconnectOnClickButton()
@@ -112,8 +123,11 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
                 _debagText.text = $"Подключение успешно \n {result.PlayFabId}";
                 _playFabDisconnectButton.gameObject.SetActive(true);
                 _playFabConnectButton.gameObject.SetActive(false);
+                
             },
             error => Debug.LogError(error));
+
+        
     }
 
     private void Unsubscribe()
@@ -142,7 +156,7 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         base.OnConnectedToMaster();
         Debug.Log("OnConnectedToMaster");
         if(!PhotonNetwork.InRoom)
-            PhotonNetwork.JoinRandomOrCreateRoom(roomName: $"Room N{Random.Range(0, 10)}");
+            PhotonNetwork.JoinRandomOrCreateRoom(roomName: _roomName);
     }
 
     public override void OnCreatedRoom()
@@ -162,5 +176,34 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     {
         Unsubscribe();
     }
-    
+
+    public List<RoomInfo> GetRoom()
+    {
+        return _roomList;
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        _roomList = new List<RoomInfo>();
+        _roomList = roomList;
+    }
+
+    public void CreateRoomButton(string text)
+    {
+        _roomName = text;
+        PhotonNetwork.AutomaticallySyncScene = true;
+        if (PhotonNetwork.IsConnected)
+        {
+            //RoomOptions roomOptions = new RoomOptions();
+            //roomOptions.MaxPlayers = 10;
+            //PhotonNetwork.CreateRoom(text, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinRandomOrCreateRoom(roomName: text);
+        }
+        else
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.GameVersion = PhotonNetwork.AppVersion;
+        }
+
+    }
 }
