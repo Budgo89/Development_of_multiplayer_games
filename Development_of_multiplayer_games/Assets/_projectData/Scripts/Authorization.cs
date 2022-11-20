@@ -213,4 +213,47 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         _roomOptions.IsOpen = false;
         
     }
+
+    public void CreateRoomFriendsButton(string text)
+    {
+        _roomName = text;
+        PhotonNetwork.AutomaticallySyncScene = true;
+        if (PhotonNetwork.IsConnected)
+        {
+            _roomOptions = new RoomOptions();
+            _roomOptions.MaxPlayers = 10;
+            _roomOptions.IsVisible = false;
+            PhotonNetwork.JoinRandomOrCreateRoom(roomName: text, roomOptions: _roomOptions);
+        }
+        else
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.GameVersion = PhotonNetwork.AppVersion;
+        }
+    }
+
+    public void ConnectRoom(string nameRoom)
+    {
+        PhotonNetwork.JoinRoom(nameRoom);
+    }
+
+    public void ConnectHiddenRoom(string nameRoom)
+    {
+        PhotonNetwork.JoinRoom(nameRoom);
+    }
+
+    public (string, bool) GetInfoRoom()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.CurrentRoom != null)
+                return (PhotonNetwork.CurrentRoom.Name, PhotonNetwork.CurrentRoom.IsVisible);
+            else
+                return ("", false);
+        }
+            
+
+        else
+            return ("", false);
+    }
 }

@@ -24,6 +24,8 @@ internal class LobbiController : BaseController
     private Transform _content;
     private TMP_InputField _createRoomName;
     private Button _createRoomButton;
+    private Button _createRoomFriendsButton;
+    private Button _openHiddenRoomButton;
 
     private List<RoomInfo> _roomList;
 
@@ -56,12 +58,28 @@ internal class LobbiController : BaseController
         _content = _lobbiView.Content;
         _createRoomName = _lobbiView.CreateRoomName;
         _createRoomButton = _lobbiView.CreateRoomButton;
+        _createRoomFriendsButton = _lobbiView.CreateRoomFriendsButton;
+        _openHiddenRoomButton = _lobbiView.OpenHiddenRoomButton;
     }
 
     private void Subscribe()
     {
         _refreshButton.onClick.AddListener(RefreshOnClickButton);
         _createRoomButton.onClick.AddListener(CreateRoomButton);
+        _createRoomFriendsButton.onClick.AddListener(CreateRoomFriendsOnClickButton);
+        _openHiddenRoomButton.onClick.AddListener(OpenHiddenRoomOnClickButton);
+    }
+
+    private void OpenHiddenRoomOnClickButton()
+    {
+        _authorization.ConnectHiddenRoom(_createRoomName.text);
+        _profilePlayer.CurrentState.Value = GameState.Room;
+    }
+
+    private void CreateRoomFriendsOnClickButton()
+    {
+        _authorization.CreateRoomFriendsButton(_createRoomName.text);
+        _profilePlayer.CurrentState.Value = GameState.Room;
     }
 
     private void CreateRoomButton()
@@ -91,13 +109,14 @@ internal class LobbiController : BaseController
             var roomButton = LoadViewRoom(_content);
             roomButton.CountRoomText.text = $"{room.PlayerCount} / {room.MaxPlayers}";
             roomButton.NameRoomText.text = room.Name;
-            roomButton.RoomButton.onClick.AddListener(ConnectRoom);
+            roomButton.RoomButton.onClick.AddListener(() => ConnectRoom(roomButton));
             _roomButtons.Add(roomButton);
         }
     }
 
-    private void ConnectRoom()
+    private void ConnectRoom(RoomButtonView room)
     {
+        _authorization.ConnectRoom(room.name);
         _profilePlayer.CurrentState.Value = GameState.Room;
     }
 

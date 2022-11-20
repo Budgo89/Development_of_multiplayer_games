@@ -1,5 +1,6 @@
 ﻿using Controllers;
 using Profile;
+using TMPro;
 using Tool;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ internal class RoomController: BaseController
 
     private RoomView _roomView;
     private Button _closeButton;
+    private TMP_Text _nameRoomText;
+    private TMP_Text _visibleRoomText;
 
     public RoomController(Transform placeForUi, ProfilePlayers profilePlayer, Authorization authorization)
     {
@@ -24,6 +27,14 @@ internal class RoomController: BaseController
         _roomView = LoadView(placeForUi);
         AddElementsUi();
         Subscribe();
+        AddInfoRoom();
+    }
+
+    private void AddInfoRoom()
+    {
+        var info = _authorization.GetInfoRoom();
+        _nameRoomText.text = info.Item1;
+        _visibleRoomText.text = info.Item2.ToString();
     }
 
     private RoomView LoadView(Transform placeForUi)
@@ -38,6 +49,8 @@ internal class RoomController: BaseController
     private void AddElementsUi()
     {
         _closeButton = _roomView.CloseButton;
+        _nameRoomText = _roomView.NameRoomText;
+        _visibleRoomText = _roomView.VisibleRoomText;
     }
 
     private void Subscribe()
