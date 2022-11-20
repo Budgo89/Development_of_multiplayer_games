@@ -27,7 +27,7 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
     private TMP_Text _debagText;
     private string _roomName;
 
-
+    private RoomOptions _roomOptions;
 
     public void StartAuthorization(MenuView menuView, ProfilePlayers profilePlayer)
     {
@@ -194,16 +194,23 @@ public class Authorization : MonoBehaviourPunCallbacks, IDisposable
         PhotonNetwork.AutomaticallySyncScene = true;
         if (PhotonNetwork.IsConnected)
         {
-            //RoomOptions roomOptions = new RoomOptions();
-            //roomOptions.MaxPlayers = 10;
+            _roomOptions = new RoomOptions();
+            _roomOptions.MaxPlayers = 10;
             //PhotonNetwork.CreateRoom(text, roomOptions, TypedLobby.Default);
-            PhotonNetwork.JoinRandomOrCreateRoom(roomName: text);
+            PhotonNetwork.JoinRandomOrCreateRoom(roomName: text, roomOptions: _roomOptions);
         }
         else
         {
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = PhotonNetwork.AppVersion;
         }
+    }
 
+    public void CloseRoom()
+    {
+        if (_roomOptions == null)
+            _roomOptions = new RoomOptions();
+        _roomOptions.IsOpen = false;
+        
     }
 }

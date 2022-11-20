@@ -12,6 +12,7 @@ public class MainController : BaseController
 
     private ConnectController _connectController;
     private LobbiController _lobbiController;
+    private RoomController _roomController;
 
     public MainController(ProfilePlayers profilePlayer, Transform placeForUi, Authorization authorization)
     {
@@ -34,6 +35,9 @@ public class MainController : BaseController
             case GameState.Lobbi:
                 _lobbiController = new LobbiController(_placeForUi, _profilePlayer, _authorization);
                 break;
+            case GameState.Room:
+                _roomController = new RoomController(_placeForUi, _profilePlayer, _authorization);
+                break;
         }
     }
 
@@ -41,5 +45,6 @@ public class MainController : BaseController
     {
         _connectController?.Dispose();
         _lobbiController?.Dispose();
+        _roomController?.Dispose();
     }
 }

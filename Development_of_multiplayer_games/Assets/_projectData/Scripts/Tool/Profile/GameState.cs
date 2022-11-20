@@ -4,5 +4,6 @@
     {
         Connect,
         Lobbi,
+        Room
     }
 }

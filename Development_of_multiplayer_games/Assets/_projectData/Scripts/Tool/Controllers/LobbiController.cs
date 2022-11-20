@@ -68,6 +68,7 @@ internal class LobbiController : BaseController
     {
 
         _authorization.CreateRoomButton(_createRoomName.text);
+        _profilePlayer.CurrentState.Value = GameState.Room;
     }
 
     private void RefreshOnClickButton()
@@ -97,7 +98,7 @@ internal class LobbiController : BaseController
 
     private void ConnectRoom()
     {
-        Debug.Log("Есть контакт");
+        _profilePlayer.CurrentState.Value = GameState.Room;
     }
 
     private RoomButtonView LoadViewRoom(Transform placeForUi)
@@ -112,5 +113,10 @@ internal class LobbiController : BaseController
     private void Unsubscribe()
     {
         _refreshButton.onClick.RemoveAllListeners();
+    }
+
+    protected override void OnDispose()
+    {
+        Unsubscribe();
     }
 }
